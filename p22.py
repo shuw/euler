@@ -1,4 +1,4 @@
-execfile("d:/code/projectEuler/names.py")
+from data.p22_names import *
 
 names.sort()
 
