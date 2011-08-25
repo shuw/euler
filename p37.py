@@ -11,18 +11,18 @@ def primes(upto):
 
     return numpy.insert(evenNumbers[primeMap], 0, 2)
             
-primes = primes(10000000)
+primes = primes(1000000)
 primeSet = set(primes)
 
-def truncatedprimes(p):
+def areLeftRightTruncationsPrimes(p):
     p2 = p
     pReversed = 0
     satisfied = True
+    powerOfTen = 1
     while True:
-        pReversed = pReversed * 10 + p2 % 10
-        p2 = p2 / 10
-        print 'f' + str(p2) 
-        print 'r' + str(pReversed)
+        pReversed += (p2 % 10) * powerOfTen
+        p2 = int(p2 / 10)
+        powerOfTen *= 10
         if p2 == 0:
             break
         if p2 not in primeSet or pReversed not in primeSet:
@@ -31,10 +31,12 @@ def truncatedprimes(p):
     return satisfied
 
 def answer():
+    sum = 0
     for p in primes:
         if p > 10:
-            if truncatedprimes(p):
+            if areLeftRightTruncationsPrimes(p):
+                sum += p
                 print p
+    return sum
 
-
-truncatedprimes(3797)
+print 'answer: ' + str(answer())
