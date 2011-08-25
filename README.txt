@@ -1,0 +1,1 @@
+attempts to learn Python by solving problems from http://projecteuler.net/
