@@ -10,7 +10,7 @@ for n in range(1, 10000):
         i += 1
 
         containsZero = False
-        for md in numToArray(m):
+        for md in toList(m):
             if md == 0:
                 containsZero = True
             d.append(md)
@@ -18,7 +18,7 @@ for n in range(1, 10000):
         if len(d) > 9 or containsZero:
             break;
         elif len(d) == 9 and len(set(d)) == 9:
-            panDigitalNumber = arrayToNum(d)
+            panDigitalNumber = fromList(d)
             if panDigitalNumber > largestPandigital:
                 largestPandigital = panDigitalNumber
                 print largestPandigital
