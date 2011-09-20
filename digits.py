@@ -1,5 +1,11 @@
 import copy
 
+# Iterates over digits in reverse order
+def iterateDigits(n):
+    while n > 0:
+        yield n % 10
+        n /= 10
+
 def toList(n):
     r = []
     while n > 0:
