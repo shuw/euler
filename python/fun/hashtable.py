@@ -1,33 +1,44 @@
 import unittest
-from collections import defaultdict
 
 
 class Hashtable:
 
     def __init__(self, size=1000):
         self._size = size
-        self._table = defaultdict(list)
+        self._array = [None] * size
 
     def set(self, key, value):
-        items = self._table[id(key)]
-        for i, (k, v) in enumerate(items):
-            if k == key:
-                # overriding value
-                items[i] = (key, value)
-                return
+        index = id(key) % self._size
+        items = self._array[index]
+        if not items:
+            items = self._array[index] = []
+        else:
+            for i, (k, v) in enumerate(items):
+                if k == key:
+                    # overriding value
+                    items[i] = (key, value)
+                    return
 
         items.append((key, value))
 
+    def get(self, key):
+        items = self._array[id(key) % self._size]
+        for k, v in items:
+            if k == key:
+                return v
+
     def items(self):
-        for items in self._table.values():
-            for item in items:
-                yield item
+        for items in self._array:
+            if items:
+                for item in items:
+                    yield item
 
 
 class TestHashtable(unittest.TestCase):
 
     def setUp(self):
-        self.ht = Hashtable(1000)
+        self.table_size = 1000
+        self.ht = Hashtable(self.table_size)
 
     def test_set(self):
         self.assertEquals(set([]), set(self.ht.items()))
@@ -49,6 +60,19 @@ class TestHashtable(unittest.TestCase):
             ('cookies', 'cream'),
             ('lakes', 'oceans')
         ]), set(self.ht.items()))
+
+    def test_get(self):
+        self.ht.set('hello', 'world1')
+        self.assertEquals('world1', self.ht.get('hello'))
+        self.ht.set('hello', 'world2')
+        self.assertEquals('world2', self.ht.get('hello'))
+
+
+    # def test_collisions(self):
+    #     # insert > table_size entries to guarantee collisions
+
+    #     for i in xrange(self.table_size * 2):
+
 
 
 if __name__ == '__main__':
