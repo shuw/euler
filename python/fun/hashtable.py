@@ -5,14 +5,14 @@ from random import random
 class Hashtable:
 
     def __init__(self, size=1000):
-        self._size = size
-        self._array = [None] * size
+        self.size = size
+        self.array = [None] * size
 
     def __setitem__(self, key, value):
-        index = id(key) % self._size
-        items = self._array[index]
+        index = id(key) % self.size
+        items = self.array[index]
         if not items:
-            items = self._array[index] = []
+            items = self.array[index] = []
         else:
             for i, (k, v) in enumerate(items):
                 if k == key:
@@ -23,13 +23,13 @@ class Hashtable:
         items.append((key, value))
 
     def __getitem__(self, key):
-        items = self._array[id(key) % self._size]
+        items = self.array[id(key) % self.size]
         for k, v in items:
             if k == key:
                 return v
 
     def items(self):
-        for items in self._array:
+        for items in self.array:
             if items:
                 for item in items:
                     yield item
