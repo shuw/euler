@@ -34,28 +34,21 @@ class BinaryTree:
 
     def items(self):
         # depth first travel returns items in order
+        for items in [ \
+            (self.left and self.left.items()), \
+            [(self.key, self.value)], \
+            (self.right and self.right.items())]:
+            if items:
+                for item in items:
+                    yield item
 
-        if self.left:
-            for item in self.left.items():
-                yield item
-
-        yield (self.key, self.value)
-
-        if self.right:
-            for item in self.right.items():
-                yield item
-
-
-def breadth_traversal(node):
-    queue = deque()
-    queue.append(node)
-    while len(queue):
-        node = queue.popleft()
-        if not node:
-            continue
-        yield (node.key, node.value)
-        queue.append(node.left)
-        queue.append(node.right)
+    def breadth(self):
+        queue = deque([self])
+        while len(queue):
+            node = queue.popleft()
+            if node:
+                yield (node.key, node.value)
+                queue += [node.left, node.right]
 
 
 class TestBinaryTree(unittest.TestCase):
@@ -76,7 +69,7 @@ class TestBinaryTree(unittest.TestCase):
             self.assertEquals(items[i], item)
 
         # test breadth traversal
-        self.assertEquals(set(breadth_traversal(root)), set(root.items()))
+        self.assertEquals(set(root.breadth()), set(items))
 
     def test_random_insert(self):
         root = BinaryTree(0, 0)
@@ -94,6 +87,9 @@ class TestBinaryTree(unittest.TestCase):
 
         # items should still match and be sorted
         self.assertEquals(sorted(items, key=lambda item: item[0]), list(root.items()))
+
+        # test breadth traversal
+        self.assertEquals(set(root.breadth()), set(items))
 
 
 if __name__ == '__main__':
