@@ -1,5 +1,6 @@
 import unittest
 from random import random, shuffle
+from collections import deque
 
 
 class BinaryTree:
@@ -45,6 +46,18 @@ class BinaryTree:
                 yield item
 
 
+def breadth_traversal(node):
+    queue = deque()
+    queue.append(node)
+    while len(queue):
+        node = queue.popleft()
+        if not node:
+            continue
+        yield (node.key, node.value)
+        queue.append(node.left)
+        queue.append(node.right)
+
+
 class TestBinaryTree(unittest.TestCase):
 
     def test_sequential_insert(self):
@@ -62,6 +75,9 @@ class TestBinaryTree(unittest.TestCase):
         for i, item in enumerate(root.items()):
             self.assertEquals(items[i], item)
 
+        # test breadth traversal
+        self.assertEquals(set(breadth_traversal(root)), set(root.items()))
+
     def test_random_insert(self):
         root = BinaryTree(0, 0)
         items = [(0, 0)]
@@ -78,6 +94,7 @@ class TestBinaryTree(unittest.TestCase):
 
         # items should still match and be sorted
         self.assertEquals(sorted(items, key=lambda item: item[0]), list(root.items()))
+
 
 if __name__ == '__main__':
     unittest.main()
