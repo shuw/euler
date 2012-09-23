@@ -1,4 +1,5 @@
 import unittest
+from random import random
 
 
 class Hashtable:
@@ -68,11 +69,17 @@ class TestHashtable(unittest.TestCase):
         self.assertEquals('world2', self.ht.get('hello'))
 
 
-    # def test_collisions(self):
-    #     # insert > table_size entries to guarantee collisions
+    def test_collisions(self):
+        inserted = []
+        for key in xrange(self.table_size * 2): # insert > table_size entries to guarantee collisions
+            value = random()
+            self.ht.set(key, value)
+            inserted.append((key, value))
 
-    #     for i in xrange(self.table_size * 2):
+        for key, value in inserted:
+            self.assertEquals(value, self.ht.get(key))
 
+        self.assertEquals(len(list(self.ht.items())), len(inserted))
 
 
 if __name__ == '__main__':
