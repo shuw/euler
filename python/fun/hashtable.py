@@ -8,7 +8,7 @@ class Hashtable:
         self._size = size
         self._array = [None] * size
 
-    def set(self, key, value):
+    def __setitem__(self, key, value):
         index = id(key) % self._size
         items = self._array[index]
         if not items:
@@ -22,7 +22,7 @@ class Hashtable:
 
         items.append((key, value))
 
-    def get(self, key):
+    def __getitem__(self, key):
         items = self._array[id(key) % self._size]
         for k, v in items:
             if k == key:
@@ -44,8 +44,8 @@ class TestHashtable(unittest.TestCase):
     def test_set(self):
         self.assertEquals(set([]), set(self.ht.items()))
 
-        self.ht.set('hello', 'world')
-        self.ht.set('cookies', 'cream')
+        self.ht['hello'] = 'world'
+        self.ht['cookies'] = 'cream'
 
         self.assertEquals(set([
             ('hello', 'world'),
@@ -53,8 +53,8 @@ class TestHashtable(unittest.TestCase):
         ]), set(self.ht.items()))
 
         # set the same key twice
-        self.ht.set('lakes', 'streams')
-        self.ht.set('lakes', 'oceans')
+        self.ht['lakes'] = 'streams'
+        self.ht['lakes'] = 'oceans'
 
         self.assertEquals(set([
             ('hello', 'world'),
@@ -63,21 +63,21 @@ class TestHashtable(unittest.TestCase):
         ]), set(self.ht.items()))
 
     def test_get(self):
-        self.ht.set('hello', 'world1')
-        self.assertEquals('world1', self.ht.get('hello'))
-        self.ht.set('hello', 'world2')
-        self.assertEquals('world2', self.ht.get('hello'))
-
+        self.ht['hello'] = 'world1'
+        self.assertEquals('world1', self.ht['hello'])
+        self.ht['hello'] = 'world2'
+        self.assertEquals('world2', self.ht['hello'])
 
     def test_collisions(self):
         inserted = []
-        for key in xrange(self.table_size * 2): # insert > table_size entries to guarantee collisions
+        # insert > table_size entries to guarantee collisions
+        for key in xrange(self.table_size * 2):
             value = random()
-            self.ht.set(key, value)
+            self.ht[key] = value
             inserted.append((key, value))
 
         for key, value in inserted:
-            self.assertEquals(value, self.ht.get(key))
+            self.assertEquals(value, self.ht[key])
 
         self.assertEquals(len(list(self.ht.items())), len(inserted))
 
